@@ -16,6 +16,7 @@ directories:
   # return whatever is at to the TMPDIR environment variable.  If you want to
   # specify them elsewhere,
   temporary_storage: "./../export/temp"
+  pi_creature_images: "./../assets/images/pi_creature/"
 universal_import_line: "from manimlib import *"
 style:
   tex_template: "default"

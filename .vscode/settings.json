@@ -1,7 +1,10 @@
 {
     "python.analysis.extraPaths": [
         "manim",
-        "manim_old",
     ],
     "python.languageServer": "Pylance",
+    "cSpell.words": [
+        "manimgl",
+        "Mobject"
+    ],
 }
