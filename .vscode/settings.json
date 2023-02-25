@@ -5,6 +5,8 @@
     "python.languageServer": "Pylance",
     "cSpell.words": [
         "manimgl",
-        "Mobject"
+        "Mobject",
+        "Pointwise"
     ],
+    "svg.preview.background": "transparent",
 }

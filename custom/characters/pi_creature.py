@@ -91,10 +91,10 @@ class PiCreature(SVGMobject):
         # Figma exports with superfluous parts, so this
         # hardcodes how to extract what we want.
         parts = self.submobjects
-        self.eyes: VGroup = self.draw_eyes(original_irises=VGroup(parts[2], parts[6]),
-                                           original_pupils=VGroup(parts[8], parts[9]))
-        self.body: VMobject = parts[10]
-        self.mouth: VMobject = parts[11]
+        self.eyes: VGroup = self.draw_eyes(original_irises=VGroup(parts[2], parts[3]),
+                                           original_pupils=VGroup(parts[0], parts[1]))
+        self.body: VMobject = parts[4]
+        self.mouth: VMobject = parts[5]
         self.mouth.insert_n_curves(10)
         self.set_submobjects([self.eyes, self.body, self.mouth])
 
@@ -116,7 +116,9 @@ class PiCreature(SVGMobject):
             pupil = VGroup(black, dot)
             pupil.set_style(fill_opacity=1, stroke_width=0)
             pupil.move_to(ref_pupil)
-            eye = VGroup(iris, pupil)
+            # eye = VGroup(iris, pupil)
+            # eye = VGroup(pupil,iris)
+            eye = VGroup(ref_pupil, iris)
             eye.pupil = pupil
             eye.iris = iris
             eyes.add(eye)

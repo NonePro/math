@@ -4,7 +4,7 @@ from collections.abc import Iterable
 import random
 
 from manimlib.animation.transform import ReplacementTransform
-from manimlib.animation.transform import Transform
+from manimlib.animation.transform import ApplyPointwiseFunction
 from manimlib.animation.transform import ApplyMethod
 from manimlib.animation.composition import LaggedStart
 from manimlib.animation.fading import FadeIn
@@ -73,70 +73,50 @@ class PiCreatureScene(InteractiveScene):
 
     def get_on_screen_pi_creatures(self):
         mobjects = self.get_mobject_family_members()
-        return VGroup(*(
-            pi for pi in self.get_pi_creatures()
-            if pi in mobjects
-        ))
+        return VGroup(*(pi for pi in self.get_pi_creatures() if pi in mobjects))
 
     def pi_changes(self, *modes, look_at=None, lag_ratio=0.5, run_time=1):
         return LaggedStart(
-            *(
-                pi.change(mode, look_at)
-                for pi, mode in zip(self.pi_creatures, modes)
-                if mode is not None
-            ),
+            *(pi.change(mode, look_at) for pi, mode in zip(self.pi_creatures, modes) if mode is not None),
             lag_ratio=lag_ratio,
             run_time=1,
         )
 
-    def introduce_bubble(
-        self,
-        pi_creature,
-        content,
-        bubble_type=SpeechBubble,
-        target_mode=None,
-        look_at=None,
-        bubble_config=dict(),
-        bubble_removal_kwargs=dict(),
-        added_anims=[],
-        **kwargs
-    ):
+    def introduce_bubble(self,
+                         pi_creature,
+                         content,
+                         bubble_type=SpeechBubble,
+                         target_mode=None,
+                         look_at=None,
+                         bubble_config=dict(),
+                         bubble_removal_kwargs=dict(),
+                         added_anims=[],
+                         **kwargs):
         if target_mode is None:
             target_mode = "thinking" if bubble_type is ThoughtBubble else "speaking"
 
         anims = []
         on_screen_mobjects = self.get_mobject_family_members()
 
-        pi_creatures_with_bubbles = [
-            pi for pi in self.get_pi_creatures()
-            if pi.bubble in on_screen_mobjects
-        ]
+        pi_creatures_with_bubbles = [pi for pi in self.get_pi_creatures() if pi.bubble in on_screen_mobjects]
         if pi_creature in pi_creatures_with_bubbles:
             pi_creatures_with_bubbles.remove(pi_creature)
             old_bubble = pi_creature.bubble
-            bubble = pi_creature.get_bubble(
-                content,
-                bubble_type=bubble_type,
-                **bubble_config
-            )
+            bubble = pi_creature.get_bubble(content, bubble_type=bubble_type, **bubble_config)
             anims += [
                 ReplacementTransform(old_bubble, bubble),
                 FadeTransform(old_bubble.content, bubble.content),
                 pi_creature.change(target_mode, look_at)
             ]
         else:
-            anims.append(PiCreatureBubbleIntroduction(
-                pi_creature,
-                content,
-                target_mode=target_mode,
-                bubble_type=bubble_type,
-                bubble_config=bubble_config,
-                **kwargs
-            ))
-        anims += [
-            RemovePiCreatureBubble(pi, **bubble_removal_kwargs)
-            for pi in pi_creatures_with_bubbles
-        ]
+            anims.append(
+                PiCreatureBubbleIntroduction(pi_creature,
+                                             content,
+                                             target_mode=target_mode,
+                                             bubble_type=bubble_type,
+                                             bubble_config=bubble_config,
+                                             **kwargs))
+        anims += [RemovePiCreatureBubble(pi, **bubble_removal_kwargs) for pi in pi_creatures_with_bubbles]
         anims += added_anims
 
         self.play(*anims, **kwargs)
@@ -166,9 +146,7 @@ class PiCreatureScene(InteractiveScene):
 
         pi_creatures = self.get_on_screen_pi_creatures()
         non_pi_creature_anims = [
-            anim
-            for anim in animations
-            if len(set(anim.mobject.get_family()).intersection(pi_creatures)) == 0
+            anim for anim in animations if len(set(anim.mobject.get_family()).intersection(pi_creatures)) == 0
         ]
         if len(non_pi_creature_anims) == 0:
             return animations
@@ -198,15 +176,9 @@ class PiCreatureScene(InteractiveScene):
             index = creatures_list.index(pi)
             proportion = float(index) / len(creatures_list)
             start_time = 0.8 * proportion
-            return squish_rate_func(
-                there_and_back,
-                start_time, start_time + 0.2
-            )
+            return squish_rate_func(there_and_back, start_time, start_time + 0.2)
 
-        self.play(*[
-            Blink(pi, rate_func=get_rate_func(pi), **kwargs)
-            for pi in creatures_list
-        ])
+        self.play(*[Blink(pi, rate_func=get_rate_func(pi), **kwargs) for pi in creatures_list])
         return self
 
     def wait(self, time=1, blink=True, **kwargs):
@@ -235,10 +207,7 @@ class PiCreatureScene(InteractiveScene):
     def look_at(self, thing_to_look_at, pi_creatures=None, added_anims=None, **kwargs):
         if pi_creatures is None:
             pi_creatures = self.get_pi_creatures()
-        anims = [
-            pi.animate.look_at(thing_to_look_at)
-            for pi in pi_creatures
-        ]
+        anims = [pi.animate.look_at(thing_to_look_at) for pi in pi_creatures]
         if added_anims is not None:
             anims.extend(added_anims)
         self.play(*anims, **kwargs)
@@ -284,10 +253,7 @@ class TeacherStudentsScene(PiCreatureScene):
         self.teacher = Mortimer(color=self.teacher_color)
         self.teacher.to_corner(DOWN + RIGHT)
         self.teacher.look(DOWN + LEFT)
-        self.students = VGroup(*[
-            Randolph(color=c)
-            for c in self.student_colors
-        ])
+        self.students = VGroup(*[Randolph(color=c) for c in self.student_colors])
         self.students.arrange(RIGHT)
         self.students.scale(self.student_scale_factor)
         self.students.to_corner(DOWN + LEFT)
@@ -306,55 +272,45 @@ class TeacherStudentsScene(PiCreatureScene):
     def teacher_says(self, content, **kwargs):
         return self.pi_creature_says(self.get_teacher(), content, **kwargs)
 
-    def student_says(
-        self, content,
-        target_mode=None,
-        bubble_direction=LEFT,
-        index=2,
-        **kwargs
-    ):
+    def student_says(self, content, target_mode=None, bubble_direction=LEFT, index=2, **kwargs):
         if target_mode is None:
             target_mode = random.choice([
                 "raise_right_hand",
                 "raise_left_hand",
             ])
         return self.pi_creature_says(
-            self.get_students()[index], content,
+            self.get_students()[index],
+            content,
             target_mode=target_mode,
-            bubble_direction=bubble_direction,
-            **kwargs
-        )
+            # bubble_direction=bubble_direction, #comment by ly
+            **kwargs)
 
     def teacher_thinks(self, content, **kwargs):
         return self.pi_creature_thinks(self.get_teacher(), content, **kwargs)
 
     def student_thinks(self, content, target_mode=None, index=2, **kwargs):
-        return self.pi_creature_thinks(
-            self.get_students()[index], content,
-            target_mode=target_mode,
-            **kwargs
-        )
+        return self.pi_creature_thinks(self.get_students()[index], content, target_mode=target_mode, **kwargs)
 
     def play_all_student_changes(self, mode, **kwargs):
         self.play_student_changes(*[mode] * len(self.students), **kwargs)
 
     def play_student_changes(self, *modes, **kwargs):
         added_anims = kwargs.pop("added_anims", [])
-        self.play(
-            self.change_students(*modes, **kwargs),
-            *added_anims
-        )
+        self.play(self.change_students(*modes, **kwargs), *added_anims)
 
     def change_students(self, *modes, look_at=None, lag_ratio=0.5, run_time=1):
         return LaggedStart(
-            *(
-                student.change(mode, look_at)
-                for student, mode in zip(self.get_students(), modes)
-                if mode is not None
-            ),
+            *(student.change(mode, look_at) for student, mode in zip(self.get_students(), modes) if mode is not None),
             lag_ratio=lag_ratio,
-            run_time=1,
+            run_time=run_time,
         )
+
+    def play_change_teacher(self,mode,**kwargs):
+        added_anims = kwargs.pop("added_anims",[])
+        self.play(self.change_teacher(mode,**kwargs),*added_anims)
+    
+    def change_teacher(self,mode,look_at=None,lag_ratio=0.5,run_time=1):
+        return LaggedStart(self.get_teacher().change(mode,look_at),lag_ratio=lag_ratio,run_time=run_time)
 
     def zoom_in_on_thought_bubble(self, bubble=None, radius=FRAME_Y_RADIUS + FRAME_X_RADIUS):
         if bubble is None:
@@ -369,17 +325,11 @@ class TeacherStudentsScene(PiCreatureScene):
         def func(point):
             centered = point + vect
             return radius * centered / get_norm(centered)
-        self.play(*[
-            ApplyPointwiseFunction(func, mob)
-            for mob in self.get_mobjects()
-        ])
+
+        self.play(*[ApplyPointwiseFunction(func, mob) for mob in self.get_mobjects()])
 
     def teacher_holds_up(self, mobject, target_mode="raise_right_hand", added_anims=None, **kwargs):
         mobject.move_to(self.hold_up_spot, DOWN)
         mobject.shift_onto_screen()
         added_anims = added_anims or []
-        self.play(
-            FadeIn(mobject, shift=UP),
-            self.teacher.change(target_mode, mobject),
-            *added_anims
-        )
+        self.play(FadeIn(mobject, shift=UP), self.teacher.change(target_mode, mobject), *added_anims)

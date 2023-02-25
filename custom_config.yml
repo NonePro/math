@@ -7,7 +7,7 @@ directories:
   output: "./../export"
   # If you want to use images, manim will look to these folders to find them
   raster_images: ""
-  vector_images: ""
+  vector_images: "./../assets/images/vector/"
   # If you want to use sounds, manim will look here to find it.
   sounds: ""
   # Manim often generates tex_files or other kinds of serialized data
