@@ -4,9 +4,16 @@
     ],
     "python.languageServer": "Pylance",
     "cSpell.words": [
+        "anims",
+        "evalf",
         "manimgl",
         "Mobject",
-        "Pointwise"
+        "morty",
+        "Pointwise",
+        "relu",
+        "smooting",
+        "submobject",
+        "sympy"
     ],
     "svg.preview.background": "transparent",
 }

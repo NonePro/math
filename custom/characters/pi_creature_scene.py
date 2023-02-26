@@ -305,12 +305,12 @@ class TeacherStudentsScene(PiCreatureScene):
             run_time=run_time,
         )
 
-    def play_change_teacher(self,mode,**kwargs):
-        added_anims = kwargs.pop("added_anims",[])
-        self.play(self.change_teacher(mode,**kwargs),*added_anims)
-    
-    def change_teacher(self,mode,look_at=None,lag_ratio=0.5,run_time=1):
-        return LaggedStart(self.get_teacher().change(mode,look_at),lag_ratio=lag_ratio,run_time=run_time)
+    def play_change_teacher(self, mode, **kwargs):
+        added_anims = kwargs.pop("added_anims", [])
+        self.play(self.change_teacher(mode, **kwargs), *added_anims)
+
+    def change_teacher(self, mode, look_at=None, lag_ratio=0.5, run_time=1):
+        return LaggedStart(self.get_teacher().change(mode, look_at), lag_ratio=lag_ratio, run_time=run_time)
 
     def zoom_in_on_thought_bubble(self, bubble=None, radius=FRAME_Y_RADIUS + FRAME_X_RADIUS):
         if bubble is None:
