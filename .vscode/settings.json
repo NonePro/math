@@ -6,14 +6,20 @@
     "cSpell.words": [
         "anims",
         "evalf",
+        "linregress",
         "manimgl",
+        "matplotlib",
         "Mobject",
         "morty",
         "Pointwise",
+        "pyplot",
         "relu",
+        "scipy",
         "smooting",
         "submobject",
-        "sympy"
+        "sympy",
+        "xlabel",
+        "ylabel"
     ],
     "svg.preview.background": "transparent",
 }
