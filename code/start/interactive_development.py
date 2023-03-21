@@ -15,11 +15,11 @@ class InteractiveDevelopment(Scene):
         self.embed()
 
         # 尝试拷贝粘贴下面这些行到交互终端中
-        self.play(ReplacementTransform(square,circle))
+        self.play(ReplacementTransform(square, circle))
         self.wait()
-        self.play(circle.animate.stretch(4,0))
-        self.play(Rotate(circle,90*DEGREES))
-        self.play(circle.animate.shift(2*RIGHT).scale(0.25))
+        self.play(circle.animate.stretch(4, 0))
+        self.play(Rotate(circle, 90 * DEGREES))
+        self.play(circle.animate.shift(2 * RIGHT).scale(0.25))
 
         text = Text("""
             In general, using the interactive shell is very helpful when developing new scenes

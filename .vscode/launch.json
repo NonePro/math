@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: dl",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${fileDirname}", // 设置当前工作路径
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Preview manim", // manim 预览
             "type": "python",
             "request": "launch",
