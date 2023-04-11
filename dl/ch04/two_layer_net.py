@@ -52,13 +52,23 @@ class TwoLayerNet:
         return grads
 
 
-net = TwoLayerNet(input_size=784, hidden_size=100, output_size=10)
-print(net.params['W1'].shape)
-print(net.params['b1'].shape)
-print(net.params['W2'].shape)
-print(net.params['b2'].shape)
+if __name__ == '__main__':
+    net = TwoLayerNet(input_size=784, hidden_size=100, output_size=10)
+    print(net.params['W1'].shape)
+    print(net.params['b1'].shape)
+    print(net.params['W2'].shape)
+    print(net.params['b2'].shape)
 
-# 伪输入，只是为了展示用法
-x = np.random.rand(100, 784)
-y = net.predict(x)
-print(y)
+    # 伪输入，只是为了展示用法
+    x = np.random.rand(100, 784)
+    y = net.predict(x)
+    print(y)
+
+    x = np.random.rand(100, 784)  # 模拟输入数据
+    t = np.random.rand(100, 10)  # 模拟正确标签
+    grads = net.numerical_gradient(x, t)  # 计算梯度
+
+    print(grads['W1'].shape)  # (784,100)
+    print(grads['b1'].shape)  # (100)
+    print(grads['W2'].shape)  # (100, 10)
+    print(grads['b2'].shape)  # (10)
