@@ -15,6 +15,7 @@
         "linregress",
         "manimgl",
         "mathbb",
+        "mathbf",
         "matplotlib",
         "mnist",
         "Mobject",
